@@ -1,0 +1,148 @@
+# melbheat
+
+**melbheat** helps a council or emergency-planning officer answer one
+question: *have days above a chosen temperature become more frequent at
+Melbourne Airport since 1970, and does the answer depend on what counts
+as “hot”?*
+
+**Documentation site:
+<https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/>**
+(function reference and a vignette that walks through the analysis and
+the app).
+
+## Quick start
+
+``` r
+
+library(melbheat)
+ex <- annual_exceedances(threshold = 35)   # days a year above 35 °C
+plot_exceedances(ex, split_year = 2000)    # chart: 8.2 vs 11.8 days a year
+```
+
+Each year is only counted if at least 80% of its days were recorded, so
+a partly missing year such as 2022 is shown in grey and left out of the
+averages.
+
+## Installation
+
+Install the development version from GitHub:
+
+``` r
+
+# install.packages("pak")
+pak::pak("ETC5523-2026/etc5523-assignment-4-tngu0386-oss")
+```
+
+or
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("ETC5523-2026/etc5523-assignment-4-tngu0386-oss")
+```
+
+## Launch the app
+
+``` r
+
+library(melbheat)
+run_app()
+```
+
+The app opens in your browser. Choose whether to count hot days or hot
+nights, set the temperature threshold, pick the months and a comparison
+year, then read the summary, the chart and the table. The **Does the
+threshold matter?** tab checks the answer across many thresholds, and
+the **Guide** tab explains each control, each field and how to read the
+results. The app uses the `bslib` package; if it is missing,
+[`run_app()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/run_app.md)
+tells you how to install it.
+
+## What is in the package
+
+| Function | What it does |
+|:---|:---|
+| `melb_temp` | Daily maximum and minimum temperature at Melbourne Airport |
+| [`annual_exceedances()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/annual_exceedances.md) | Days per year above a threshold, flagging years with too many missing days |
+| [`summarise_periods()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/summarise_periods.md) | Average annual count before and after a chosen year |
+| [`describe_periods()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/describe_periods.md) | Plain-language summary: what changed and how sure we are |
+| [`threshold_sensitivity()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/threshold_sensitivity.md) | The same comparison repeated across many thresholds |
+| [`plot_exceedances()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/plot_exceedances.md), [`plot_sensitivity()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/plot_sensitivity.md) | ggplot2 charts that state the finding in the title |
+| [`run_app()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/run_app.md) | Launches the Shiny app |
+
+## Data
+
+`melb_temp` holds one row per calendar day from 1 January 1970 to 26
+July 2022 for the Melbourne Airport weather station (Bureau of
+Meteorology station 086282): date, year, month, daily maximum (`tmax`)
+and minimum (`tmin`) temperature in degrees Celsius, and the Bureau’s
+quality flag for each. Days without an observation are kept as `NA`.
+Readings that accumulate over more than one day are set to `NA`.
+
+Source: Australian Bureau of Meteorology, Climate Data Online,
+<http://www.bom.gov.au/climate/data/> (products IDCJAC0010 and
+IDCJAC0011). Copyright Commonwealth of Australia, Bureau of Meteorology;
+used here for educational purposes with attribution. The raw files and
+the script that prepares them (`data-raw/melb_temp.R`) are in the
+repository, so the data set can be rebuilt from scratch. The MIT licence
+covers the package code, not the data.
+
+## Limits
+
+This is one weather station, readings are as recorded (not adjusted for
+instrument or site changes), and the comparison shows *that* hot days
+were more frequent later, not *why*.
+
+## Generative AI declaration
+
+**Generative AI declaration:** I used Claude (Anthropic) to plan the
+package and app, to draft the R code, roxygen2 documentation, tests,
+vignette, README and styling, and to help structure the pkgdown site and
+GitHub Actions configuration. I reviewed, ran and revised the generated
+code and text myself, and I am responsible for all submitted work.
+
+# Package index
+
+## Launch the app
+
+One call opens the Shiny app in your browser.
+
+- [`run_app()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/run_app.md)
+  : Launch the Melbourne Airport heat explorer
+
+## Count and compare
+
+The analysis behind the app. Each function takes the output of the one
+before it.
+
+- [`annual_exceedances()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/annual_exceedances.md)
+  : Count the days each year above a temperature threshold
+- [`summarise_periods()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/summarise_periods.md)
+  : Compare the average annual count before and after a year
+- [`describe_periods()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/describe_periods.md)
+  : Say what a period comparison shows, and how sure we can be
+- [`threshold_sensitivity()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/threshold_sensitivity.md)
+  : Does the conclusion depend on what counts as "hot"?
+
+## Draw the results
+
+ggplot2 charts that state the finding in their title.
+
+- [`plot_exceedances()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/plot_exceedances.md)
+  : Chart the number of hot days (or nights) per year
+- [`plot_sensitivity()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/plot_sensitivity.md)
+  : Chart whether the conclusion depends on the threshold
+
+## Data
+
+Daily temperatures at Melbourne Airport, 1970 to 2022.
+
+- [`melb_temp`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/melb_temp.md)
+  : Daily temperatures at Melbourne Airport, 1970 to 2022
+
+# Articles
+
+### Start here
+
+- [Are hot days getting more common at Melbourne
+  Airport?](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/articles/melbheat.md):
