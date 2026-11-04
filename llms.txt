@@ -54,9 +54,7 @@ nights, set the temperature threshold, pick the months and a comparison
 year, then read the summary, the chart and the table. The **Does the
 threshold matter?** tab checks the answer across many thresholds, and
 the **Guide** tab explains each control, each field and how to read the
-results. The app uses the `bslib` package; if it is missing,
-[`run_app()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/run_app.md)
-tells you how to install it.
+results.
 
 ## What is in the package
 

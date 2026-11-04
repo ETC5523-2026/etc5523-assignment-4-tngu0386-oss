@@ -29,10 +29,9 @@ run_app()
 ```
 
 [`run_app()`](https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/reference/run_app.md)
-opens the Shiny app in your browser. The app uses the `bslib` package,
-so if you see a message asking for it, run `install.packages("bslib")`
-first. The rest of this article uses the same functions the app calls,
-so you can work in code or in the app and get identical results.
+opens the Shiny app in your browser. The rest of this article uses the
+same functions the app calls, so you can work in code or in the app and
+get identical results.
 
 ## The data
 
