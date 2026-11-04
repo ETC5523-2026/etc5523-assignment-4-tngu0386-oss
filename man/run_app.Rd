@@ -19,7 +19,6 @@ Starts the Shiny app that is installed with the package in \code{inst/app}. The
 app is built for a council or emergency-planning officer who wants to know
 whether days above a chosen temperature have become more frequent at
 Melbourne Airport, and whether the answer depends on what counts as "hot".
-It needs the suggested package \pkg{bslib}.
 }
 \examples{
 if (interactive()) {

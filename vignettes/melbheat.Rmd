@@ -37,9 +37,7 @@ library(melbheat)
 run_app()
 ```
 
-`run_app()` opens the Shiny app in your browser. The app uses the `bslib`
-package, so if you see a message asking for it, run
-`install.packages("bslib")` first. The rest of this article uses the same functions the app calls, so
+`run_app()` opens the Shiny app in your browser. The rest of this article uses the same functions the app calls, so
 you can work in code or in the app and get identical results.
 
 ## The data

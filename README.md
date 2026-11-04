@@ -51,8 +51,7 @@ The app opens in your browser. Choose whether to count hot days or hot nights,
 set the temperature threshold, pick the months and a comparison year, then
 read the summary, the chart and the table. The **Does the threshold matter?**
 tab checks the answer across many thresholds, and the **Guide** tab explains
-each control, each field and how to read the results. The app uses the `bslib`
-package; if it is missing, `run_app()` tells you how to install it.
+each control, each field and how to read the results.
 
 ## What is in the package
 

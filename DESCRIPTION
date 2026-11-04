@@ -16,8 +16,8 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 4.1)
-Imports: cli, ggplot2, shiny, stats
-Suggests: bslib, knitr, rmarkdown, testthat (>= 3.0.0)
+Imports: bslib, cli, ggplot2, shiny, stats
+Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 LazyData: true

@@ -4,7 +4,6 @@
 #' app is built for a council or emergency-planning officer who wants to know
 #' whether days above a chosen temperature have become more frequent at
 #' Melbourne Airport, and whether the answer depends on what counts as "hot".
-#' It needs the suggested package \pkg{bslib}.
 #'
 #' @param ... Further arguments passed to [shiny::runApp()], for example
 #'   `launch.browser = FALSE` or `port = 4321`.
@@ -24,16 +23,6 @@ run_app <- function(...) {
       "Could not find the app directory.",
       "i" = "Try re-installing {.pkg melbheat}."
     ))
-  }
-
-  # bslib is only used by the app, so it is a suggested package.
-  for (pkg in "bslib") {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      cli::cli_abort(c(
-        "Package {.pkg {pkg}} must be installed to run the app.",
-        "i" = "You can install it with {.code install.packages('{pkg}')}."
-      ))
-    }
   }
 
   shiny::runApp(app_dir, ...)
