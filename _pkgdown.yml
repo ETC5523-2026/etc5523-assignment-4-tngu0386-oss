@@ -1,0 +1,51 @@
+url: https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/
+
+template:
+  bootstrap: 5
+  light-switch: true
+  bslib:
+    primary: "#b45309"
+    bg: "#fdfcfa"
+    fg: "#1f2933"
+
+navbar:
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github, lightswitch]
+
+home:
+  title: Hot days and hot nights at Melbourne Airport
+  description: >
+    Count the days a year above a temperature you choose, compare two
+    periods and see whether the answer depends on the threshold. An
+    R package with a Shiny app.
+
+articles:
+  - title: Start here
+    navbar: ~
+    contents:
+      - melbheat
+
+reference:
+  - title: Launch the app
+    desc: One call opens the Shiny app in your browser.
+    contents:
+      - run_app
+  - title: Count and compare
+    desc: >
+      The analysis behind the app. Each function takes the output of the
+      one before it.
+    contents:
+      - annual_exceedances
+      - summarise_periods
+      - describe_periods
+      - threshold_sensitivity
+  - title: Draw the results
+    desc: ggplot2 charts that state the finding in their title.
+    contents:
+      - plot_exceedances
+      - plot_sensitivity
+  - title: Data
+    desc: Daily temperatures at Melbourne Airport, 1970 to 2022.
+    contents:
+      - melb_temp

@@ -1,0 +1,183 @@
+---
+title: "Are hot days getting more common at Melbourne Airport?"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Are hot days getting more common at Melbourne Airport?}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>",
+  fig.width = 7, fig.height = 4.2, fig.retina = 2, out.width = "100%"
+)
+```
+
+A council or emergency-planning officer has to say, in one sentence, whether
+hot weather is becoming more frequent. `melbheat` answers that for Melbourne
+Airport in three steps, and this article walks through them:
+
+1. count the days each year above a temperature you choose;
+2. compare an earlier period with a later one, and say how sure we can be;
+3. check whether the answer depends on what you count as "hot".
+
+By the end you will be able to reproduce every number in the app with a
+few lines of code, and know how to read it and where it stops being reliable.
+
+## Install and launch
+
+```{r, eval = FALSE}
+# install.packages("pak")
+pak::pak("ETC5523-2026/etc5523-assignment-4-tngu0386-oss")
+```
+
+```{r, eval = FALSE}
+library(melbheat)
+run_app()
+```
+
+`run_app()` opens the Shiny app in your browser. The app uses the `bslib`
+package, so if you see a message asking for it, run
+`install.packages("bslib")` first. The rest of this article uses the same functions the app calls, so
+you can work in code or in the app and get identical results.
+
+## The data
+
+`melb_temp` has one row per calendar day, from 1 January 1970 to 26 July 2022,
+at the Bureau of Meteorology station 086282 (Melbourne Airport). Days with no
+usable reading are kept as `NA` instead of being dropped, so that a gap is
+visible rather than silent.
+
+```{r}
+library(melbheat)
+melb_temp[melb_temp$date >= "2019-01-24" & melb_temp$date <= "2019-01-26", ]
+```
+
+| Field | Meaning |
+|:--|:----------------------------------------------|
+| `date`, `year`, `month` | Calendar date and its year and month |
+| `tmax`, `tmin` | Daily maximum and minimum temperature (°C) |
+| `tmax_quality`, `tmin_quality` | The Bureau's quality flag for each reading |
+
+The raw files and the script that builds `melb_temp` are in `data-raw/` in the
+source repository, so the preparation can be re-run from scratch.
+
+## Step 1: count hot days each year
+
+`annual_exceedances()` counts the days in each year with a daily maximum above a
+threshold. The threshold has no default on purpose: what counts as hot is your
+decision, and the function asks for it.
+
+```{r}
+ex <- annual_exceedances(threshold = 35)
+tail(ex, 4)
+```
+
+Look at the last row. 2022 has data for only `r ex$n_observed[ex$year == 2022]`
+of `r ex$n_days[ex$year == 2022]` days, because the record stops in July, so
+`reliable` is `FALSE`. A year is only trusted when at least 80% of its days
+were observed (change this with `min_coverage`). Without that rule a short
+year would look like a cool one.
+
+`plot_exceedances()` draws the counts. Add `split_year` to see the two periods
+being compared.
+
+```{r first-chart}
+plot_exceedances(ex, split_year = 2000)
+```
+
+The title is the finding, the hottest year is the only bar that is labelled,
+and grey bars are the years left out of the averages.
+
+## Step 2: compare two periods and say how sure we are
+
+`summarise_periods()` averages the reliable years either side of a year you
+choose, and `describe_periods()` turns the table into sentences.
+
+```{r}
+periods <- summarise_periods(ex, split_year = 2000)
+periods[, c("period", "n_years", "mean_exceed", "sd_exceed")]
+```
+
+```{r}
+said <- describe_periods(periods, variable = "tmax", threshold = 35)
+said$headline
+said$how_sure
+```
+
+The "rough 95% range" is the gap between the two averages plus or minus two
+standard errors. It treats each year as independent, which neighbouring hot
+years are not quite, so read it as a guide to whether the gap is bigger than
+ordinary year-to-year variation, not as a formal test.
+
+When there is nothing to compare, the function says so instead of reporting
+a gap of zero. Here, a very high threshold in a single month leaves no hot
+days at all:
+
+```{r}
+rare <- annual_exceedances(threshold = 42, months = 7)
+describe_periods(summarise_periods(rare, split_year = 2000),
+                 variable = "tmax", threshold = 42)$headline
+```
+
+## Step 3: does the answer depend on the threshold?
+
+A conclusion that only holds at 35 °C would be fragile.
+`threshold_sensitivity()` repeats the comparison across a range of thresholds.
+
+```{r}
+sens <- threshold_sensitivity(thresholds = c(30, 33, 35, 38, 40))
+sens[, c("threshold", "mean_before", "mean_after", "difference")]
+```
+
+```{r sensitivity-chart}
+plot_sensitivity(threshold_sensitivity(), highlight = 35)
+```
+
+The later period is higher at every threshold. The gap in days is bigger at
+low thresholds simply because there are more such days. The `ratio` column
+puts the thresholds on a common footing: later years had roughly 1.2 to 1.5
+times as many hot days at most thresholds, and a larger multiple for the
+rarest days, where the counts are small and noisier.
+
+### Hot nights
+
+The same functions work for the daily minimum. A hot night is often defined
+as a minimum above 20 °C.
+
+```{r hot-nights}
+nights <- annual_exceedances(variable = "tmin", threshold = 20)
+plot_exceedances(nights, split_year = 2000)
+```
+
+## Use the app
+
+Everything above is in the app, with the arithmetic hidden behind controls.
+
+| Control | What it does |
+|:------|:--------------------------------------------|
+| What are you counting? | Hot days (daily maximum) or hot nights (daily minimum) |
+| A day counts if it is above | The threshold, in °C |
+| Months to include | Restrict to a season, for example December to February |
+| Compare years up to ... with years after | The year that splits the two periods |
+| Minimum share of days observed | Under "Show advanced setting"; how complete a year must be to be used |
+
+The **See the trend** tab shows the finding first ("What this shows" and "How
+sure are we?"), then the chart, then the period table. **Does the threshold
+matter?** is Step 3. **Guide** explains each field. Chart and table can be
+downloaded. If your choices leave nothing to count, for example no months
+ticked, the app tells you what to change instead of showing an empty chart.
+
+## What this can and cannot tell you
+
+* It is **one weather station**. Other parts of Melbourne can differ.
+* Readings are **as recorded**. They are not adjusted for changes in
+  instruments or surroundings.
+* The comparison shows that hot days were **more frequent later**. It does not
+  say why.
+* The result depends on the split year you choose, so try several.
+* The range from `describe_periods()` is a rough guide, not a hypothesis test.
+
+Data: Australian Bureau of Meteorology, Climate Data Online. Copyright
+Commonwealth of Australia, Bureau of Meteorology.

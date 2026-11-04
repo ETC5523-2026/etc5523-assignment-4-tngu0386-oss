@@ -1,0 +1,29 @@
+Package: melbheat
+Title: Explore Hot Days and Hot Nights at Melbourne Airport
+Version: 0.0.0.9000
+Authors@R: 
+    person("Tin", "Nguyen", email = "truongtin098@gmail.com",
+           role = c("aut", "cre"))
+Description: Provides daily maximum and minimum temperature observations
+    from the Melbourne Airport weather station (1970 to 2022), functions
+    that count the days each year above a chosen temperature while
+    accounting for missing observations, compare two periods, describe the
+    result in plain language and test whether the conclusion depends on the
+    definition of a hot day, ggplot2 charts for each result, and a Shiny app
+    that lets a planner explore whether hot days and hot nights have become
+    more frequent.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends: R (>= 4.1)
+Imports: cli, ggplot2, shiny, stats
+Suggests: bslib, knitr, rmarkdown, testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+LazyData: true
+LazyDataCompression: bzip2
+URL: https://etc5523-2026.github.io/etc5523-assignment-4-tngu0386-oss/,
+        https://github.com/ETC5523-2026/etc5523-assignment-4-tngu0386-oss
+BugReports: https://github.com/ETC5523-2026/etc5523-assignment-4-tngu0386-oss/issues
+Config/roxygen2/version: 8.1.0
+NeedsCompilation: no
